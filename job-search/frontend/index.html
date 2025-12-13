@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Job Matcher</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <span class="logo-icon">🎯</span>
+          <h1>AI Job Matcher</h1>
+        </div>
+        <p class="tagline">
+          Find your perfect job match with AI-powered analysis
+        </p>
+      </header>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Input Section -->
+        <section class="input-section" id="inputSection">
+          <div class="card">
+            <h2>📄 Start Your Job Search</h2>
+            <form id="searchForm">
+              <div class="form-group">
+                <label for="resumeFile">Upload Resume (PDF)</label>
+                <div class="file-upload" id="fileUpload">
+                  <input
+                    type="file"
+                    id="resumeFile"
+                    accept=".pdf"
+                    style="display: none"
+                  />
+                  <div class="file-upload-content">
+                    <span class="file-icon">📄</span>
+                    <span class="file-text" id="fileText"
+                      >Click or drag to upload PDF</span
+                    >
+                  </div>
+                </div>
+                <input
+                  type="hidden"
+                  id="resumePath"
+                  value="resume-parser/resume.pdf"
+                />
+              </div>
+              <div class="form-row two-col">
+                <div class="form-group">
+                  <label for="currentLocation">📍 Your Current Location</label>
+                  <input
+                    type="text"
+                    id="currentLocation"
+                    placeholder="e.g., New York, NY"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="desiredLocation">🎯 Desired Work Location</label>
+                  <input
+                    type="text"
+                    id="desiredLocation"
+                    placeholder="e.g., San Francisco, CA"
+                  />
+                </div>
+              </div>
+              <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="isRemote" checked />
+                  <span class="checkmark"></span>
+                  🏠 Open to Remote Work
+                </label>
+              </div>
+              <button type="submit" class="btn-primary" id="startBtn">
+                <span class="btn-text">🚀 Start Analysis</span>
+                <span class="btn-loading" style="display: none">
+                  <span class="spinner"></span> Processing...
+                </span>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section
+          class="progress-section"
+          id="progressSection"
+          style="display: none"
+        >
+          <div class="card">
+            <h2>⏳ Analysis Progress</h2>
+            <div class="progress-container">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div class="progress-text" id="progressText">Initializing...</div>
+            </div>
+            <div class="steps-container" id="stepsContainer">
+              <div class="step" data-step="init">
+                <div class="step-icon">🔧</div>
+                <div class="step-info">
+                  <span class="step-title">Initialize</span>
+                  <span class="step-status">Waiting...</span>
+                </div>
+              </div>
+              <div class="step" data-step="resume">
+                <div class="step-icon">📄</div>
+                <div class="step-info">
+                  <span class="step-title">Parse Resume</span>
+                  <span class="step-status">Waiting...</span>
+                </div>
+              </div>
+              <div class="step" data-step="queries">
+                <div class="step-icon">🔍</div>
+                <div class="step-info">
+                  <span class="step-title">Generate Queries</span>
+                  <span class="step-status">Waiting...</span>
+                </div>
+              </div>
+              <div class="step" data-step="search">
+                <div class="step-icon">🌐</div>
+                <div class="step-info">
+                  <span class="step-title">Search Jobs</span>
+                  <span class="step-status">Waiting...</span>
+                </div>
+              </div>
+              <div class="step" data-step="score">
+                <div class="step-icon">📊</div>
+                <div class="step-info">
+                  <span class="step-title">Score Matches</span>
+                  <span class="step-status">Waiting...</span>
+                </div>
+              </div>
+              <div class="step" data-step="guidance">
+                <div class="step-icon">💡</div>
+                <div class="step-info">
+                  <span class="step-title">Career Guidance</span>
+                  <span class="step-status">Waiting...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Results Section -->
+        <section
+          class="results-section"
+          id="resultsSection"
+          style="display: none"
+        >
+          <!-- Profile Card -->
+          <div class="card profile-card" id="profileCard">
+            <h2>👤 Your Profile</h2>
+            <div class="profile-content" id="profileContent"></div>
+          </div>
+
+          <!-- Stats Row -->
+          <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+              <div class="stat-value" id="totalJobs">0</div>
+              <div class="stat-label">Jobs Found</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="avgScore">0%</div>
+              <div class="stat-label">Avg Match</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="topScore">0%</div>
+              <div class="stat-label">Best Match</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="skillGaps">0</div>
+              <div class="stat-label">Skill Gaps</div>
+            </div>
+          </div>
+
+          <!-- Top Matches -->
+          <div class="card matches-card">
+            <h2>🏆 Top Job Matches</h2>
+            <div class="matches-list" id="matchesList"></div>
+          </div>
+
+          <!-- Career Guidance -->
+          <div class="card guidance-card">
+            <h2>💡 Career Guidance</h2>
+            <div class="guidance-tabs">
+              <button class="tab-btn active" data-tab="skills">
+                Skill Gaps
+              </button>
+              <button class="tab-btn" data-tab="learning">Learning</button>
+              <button class="tab-btn" data-tab="resume">Resume Tips</button>
+              <button class="tab-btn" data-tab="interview">Interview</button>
+            </div>
+            <div class="guidance-content" id="guidanceContent"></div>
+          </div>
+
+          <!-- New Search Button -->
+          <button class="btn-secondary" id="newSearchBtn">🔄 New Search</button>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>Powered by AI • Built with LangChain & JobSpy</p>
+      </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>
