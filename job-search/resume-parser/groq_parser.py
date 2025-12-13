@@ -10,7 +10,7 @@ from pathlib import Path
 from groq import Groq
 
 # ---- Groq Client ----
-client = Groq(api_key="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")
+client = Groq(api_key="YOUR_GROQ_API_KEY")
 
 # ---- PDF to Image Conversion using PyMuPDF ----
 try:
